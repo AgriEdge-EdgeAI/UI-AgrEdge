@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Grid, Card, CardContent, Typography, Button, Box, Paper, Snackbar } from '@mui/material';
 import { Opacity as MoistureIcon, Thermostat as TempIcon, PowerSettingsNew as PumpIcon } from '@mui/icons-material';
+import SensorChart from './SensorChart';
 
 const Dashboard: React.FC = () => {
   const [moisture, setMoisture] = useState(42);
@@ -50,6 +51,11 @@ const Dashboard: React.FC = () => {
               </Typography>
             </CardContent>
           </Card>
+        </Grid>
+        
+        {/* Chart Section - Full Width */}
+        <Grid item xs={12}>
+          <SensorChart />
         </Grid>
         
         {/* Pump Control Card */}
