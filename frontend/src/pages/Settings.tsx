@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Paper, Typography, Box, Grid, Switch, Button,
-  FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
-  Divider, Slider, Chip, Alert, Snackbar, Avatar,
-  Card, CardContent, IconButton, Tooltip
+  FormControl, InputLabel, Select, MenuItem, Divider,
+  Slider, Chip, Alert, Snackbar, Avatar, Tooltip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -12,7 +11,6 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SaveIcon from '@mui/icons-material/Save';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 
 const PRIMARY_GREEN = '#0d6b3a';
@@ -37,7 +35,7 @@ const Settings: React.FC = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [lowMoistureAlert, setLowMoistureAlert] = useState(30);
 
-  // Load saved settings from localStorage on mount
+  // Load saved settings from localStorage
   useEffect(() => {
     const savedStart = localStorage.getItem('wateringStartHour');
     const savedEnd = localStorage.getItem('wateringEndHour');
@@ -56,12 +54,11 @@ const Settings: React.FC = () => {
     if (savedDays) setActiveDays(JSON.parse(savedDays));
   }, []);
 
-  const handleDayToggle = (day: keyof typeof activeDays) => {
-    setActiveDays({ ...activeDays, [day]: !activeDays[day] });
+  const handleDayToggle = (day: string) => {
+    setActiveDays({ ...activeDays, [day]: !activeDays[day as keyof typeof activeDays] });
   };
 
   const handleSaveSettings = () => {
-    // Save to localStorage
     localStorage.setItem('wateringStartHour', wateringStartHour);
     localStorage.setItem('wateringEndHour', wateringEndHour);
     localStorage.setItem('readingFrequency', readingFrequency);
@@ -96,7 +93,6 @@ const Settings: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#0f172a', mb: 1 }}>
           ⚙️ Settings
@@ -107,7 +103,7 @@ const Settings: React.FC = () => {
       </Box>
 
       <Grid container spacing={3}>
-        {/* Left Column - Main Settings */}
+        {/* Left Column */}
         <Grid size={{ xs: 12, lg: 7 }}>
           {/* Watering Schedule Card */}
           <Paper sx={{ p: 3, mb: 3, border: '1px solid #e2e8f0' }}>
@@ -126,13 +122,12 @@ const Settings: React.FC = () => {
                 <Typography variant="subtitle2" sx={{ color: '#0f172a', mb: 1, fontWeight: 600 }}>
                   Start Time
                 </Typography>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel>Select time</InputLabel>
                   <Select
                     value={wateringStartHour}
-                    onChange={(e: SelectChangeEvent) => setWateringStartHour(e.target.value)}
+                    onChange={(e) => setWateringStartHour(e.target.value)}
                     label="Select time"
-                    sx={{ borderRadius: 2 }}
                   >
                     <MenuItem value="06:00">06:00 AM (Early Morning)</MenuItem>
                     <MenuItem value="07:00">07:00 AM</MenuItem>
@@ -150,13 +145,12 @@ const Settings: React.FC = () => {
                 <Typography variant="subtitle2" sx={{ color: '#0f172a', mb: 1, fontWeight: 600 }}>
                   End Time
                 </Typography>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel>Select time</InputLabel>
                   <Select
                     value={wateringEndHour}
-                    onChange={(e: SelectChangeEvent) => setWateringEndHour(e.target.value)}
+                    onChange={(e) => setWateringEndHour(e.target.value)}
                     label="Select time"
-                    sx={{ borderRadius: 2 }}
                   >
                     <MenuItem value="16:00">04:00 PM</MenuItem>
                     <MenuItem value="17:00">05:00 PM</MenuItem>
@@ -178,14 +172,16 @@ const Settings: React.FC = () => {
                     <Tooltip title={day.full} key={day.key}>
                       <Chip
                         label={day.label}
-                        onClick={() => handleDayToggle(day.key as keyof typeof activeDays)}
-                        color={activeDays[day.key as keyof typeof activeDays] ? 'primary' : 'default'}
+                        onClick={() => handleDayToggle(day.key)}
                         sx={{
                           width: 40,
                           fontWeight: 600,
                           bgcolor: activeDays[day.key as keyof typeof activeDays] ? PRIMARY_GREEN : '#f1f5f9',
                           color: activeDays[day.key as keyof typeof activeDays] ? '#fff' : '#64748b',
-                          '&:hover': { bgcolor: activeDays[day.key as keyof typeof activeDays] ? PRIMARY_GREEN_LIGHT : '#e2e8f0' }
+                          cursor: 'pointer',
+                          '&:hover': { 
+                            bgcolor: activeDays[day.key as keyof typeof activeDays] ? PRIMARY_GREEN_LIGHT : '#e2e8f0' 
+                          }
                         }}
                       />
                     </Tooltip>
@@ -212,13 +208,12 @@ const Settings: React.FC = () => {
                 <Typography variant="subtitle2" sx={{ color: '#0f172a', mb: 1, fontWeight: 600 }}>
                   Readings Frequency
                 </Typography>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel>Update interval</InputLabel>
                   <Select
                     value={readingFrequency}
-                    onChange={(e: SelectChangeEvent) => setReadingFrequency(e.target.value)}
+                    onChange={(e) => setReadingFrequency(e.target.value)}
                     label="Update interval"
-                    sx={{ borderRadius: 2 }}
                   >
                     <MenuItem value="1">Every 1 second (Real-time)</MenuItem>
                     <MenuItem value="5">Every 5 seconds (Default)</MenuItem>
@@ -241,6 +236,7 @@ const Settings: React.FC = () => {
                     min={10}
                     max={50}
                     step={5}
+                    valueLabelDisplay="auto"
                     marks={[
                       { value: 10, label: '10%' },
                       { value: 20, label: '20%' },
@@ -259,7 +255,7 @@ const Settings: React.FC = () => {
           </Paper>
         </Grid>
 
-        {/* Right Column - Preferences & Actions */}
+        {/* Right Column */}
         <Grid size={{ xs: 12, lg: 5 }}>
           {/* Preferences Card */}
           <Paper sx={{ p: 3, mb: 3, border: '1px solid #e2e8f0' }}>
@@ -349,8 +345,7 @@ const Settings: React.FC = () => {
                   borderRadius: 2,
                   background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`,
                   '&:hover': { transform: 'translateY(-2px)' }
-                }}
-              >
+              }}>
                 Save Changes
               </Button>
               <Button
@@ -364,8 +359,7 @@ const Settings: React.FC = () => {
                   borderColor: '#e2e8f0',
                   color: '#64748b',
                   '&:hover': { borderColor: PRIMARY_GREEN, color: PRIMARY_GREEN, transform: 'translateY(-2px)' }
-                }}
-              >
+              }}>
                 Reset
               </Button>
             </Box>
@@ -373,7 +367,6 @@ const Settings: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
