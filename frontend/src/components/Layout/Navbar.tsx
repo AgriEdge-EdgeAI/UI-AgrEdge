@@ -17,7 +17,6 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('Farmer');
   const [userInitial, setUserInitial] = useState('F');
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const Navbar: React.FC = () => {
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
       const name = localStorage.getItem('userName') || 'Farmer';
       setIsLoggedIn(loggedIn);
-      setUserName(name);
       setUserInitial(name.charAt(0).toUpperCase());
     };
     checkLogin();
@@ -76,7 +74,7 @@ const Navbar: React.FC = () => {
                   </Box>
                   <Avatar sx={{ width: 34, height: 34, bgcolor: PRIMARY_GREEN, color: '#fff', fontWeight: 600 }}>{userInitial}</Avatar>
                 </Box>
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} PaperProps={{ sx: { mt: 1.5, minWidth: 180, borderRadius: 2 } }}>
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                   <MenuItem onClick={() => { navigate('/dashboard'); handleClose(); }}><PersonIcon sx={{ mr: 1, fontSize: 20 }} /> Dashboard</MenuItem>
                   <MenuItem onClick={() => { navigate('/settings'); handleClose(); }}><SettingsIcon sx={{ mr: 1, fontSize: 20 }} /> Settings</MenuItem>
                   <MenuItem onClick={handleLogout} sx={{ color: '#ef4444' }}><LogoutIcon sx={{ mr: 1, fontSize: 20 }} /> Logout</MenuItem>

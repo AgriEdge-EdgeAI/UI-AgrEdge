@@ -22,7 +22,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
     setTimeout(() => {
       if (email && password) {
         localStorage.setItem('isLoggedIn', 'true');
@@ -38,27 +37,13 @@ const Login: React.FC = () => {
 
   return (
     <Container maxWidth="sm" sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', py: 4 }}>
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: 5, 
-          width: '100%', 
-          borderRadius: 4,
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
-          bgcolor: '#ffffff',
-        }}
-      >
+      <Paper elevation={3} sx={{ p: 5, width: '100%', borderRadius: 4, border: '1px solid #e2e8f0', bgcolor: '#ffffff' }}>
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: PRIMARY_GREEN, width: 56, height: 56 }}>
             <AgricultureIcon sx={{ fontSize: 28, color: '#fff' }} />
           </Avatar>
-          <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#0f172a' }}>
-            Welcome Back
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#475569', mt: 1 }}>
-            Sign in to monitor your farm
-          </Typography>
+          <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#0f172a' }}>Welcome Back</Typography>
+          <Typography variant="body2" sx={{ color: '#475569', mt: 1 }}>Sign in to monitor your farm</Typography>
         </Box>
 
         {error && <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>{error}</Alert>}
@@ -73,12 +58,14 @@ const Login: React.FC = () => {
             margin="normal"
             required
             placeholder="farmer@agriedge.com"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailOutlinedIcon sx={{ color: '#94a3b8' }} />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlinedIcon sx={{ color: '#94a3b8' }} />
+                  </InputAdornment>
+                ),
+              },
             }}
             sx={{ mb: 2 }}
           />
@@ -91,64 +78,39 @@ const Login: React.FC = () => {
             margin="normal"
             required
             placeholder="Enter your password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlinedIcon sx={{ color: '#94a3b8' }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockOutlinedIcon sx={{ color: '#94a3b8' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
           
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size="large"
-            disabled={loading}
-            sx={{ 
-              mt: 4, 
-              py: 1.5, 
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`,
-              fontSize: '1rem',
-              fontWeight: 600,
-              boxShadow: `0 4px 15px rgba(13,107,58,0.3)`,
-              color: '#ffffff',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: `0 8px 20px rgba(13,107,58,0.4)`,
-              }
-            }}
-          >
+          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading} sx={{ mt: 4, py: 1.5, borderRadius: 2, background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`, fontSize: '1rem', fontWeight: 600, color: '#ffffff', '&:hover': { transform: 'translateY(-2px)' } }}>
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
 
           <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Typography variant="body2" sx={{ color: '#475569' }}>
               Don't have an account?{' '}
-              <Link 
-                component="button"
-                underline="hover"
-                sx={{ color: PRIMARY_GREEN, fontWeight: 600, cursor: 'pointer' }}
-                onClick={() => navigate('/register')}
-              >
+              <Link component="button" underline="hover" sx={{ color: PRIMARY_GREEN, fontWeight: 600, cursor: 'pointer' }} onClick={() => navigate('/register')}>
                 Create Account
               </Link>
             </Typography>
           </Box>
           
           <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="caption" sx={{ color: '#94a3b8' }}>
-              Demo: Use any email and password
-            </Typography>
+            <Typography variant="caption" sx={{ color: '#94a3b8' }}>Demo: Use any email and password</Typography>
           </Box>
         </form>
       </Paper>
