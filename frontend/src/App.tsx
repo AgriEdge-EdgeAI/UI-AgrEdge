@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import LiveFeed from './pages/LiveFeed';
 import History from './pages/History';
 
+// Protected route wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   return isLoggedIn ? <>{children}</> : <Navigate to="/login" replace />;
@@ -22,12 +23,23 @@ function App() {
       <Router>
         <Layout>
           <Routes>
+            {/* Public routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/live-feed" element={<ProtectedRoute><LiveFeed /></ProtectedRoute>} />
-            <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+            
+            {/* Protected routes - require login */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute><Dashboard /></ProtectedRoute>
+            } />
+            <Route path="/live-feed" element={
+              <ProtectedRoute><LiveFeed /></ProtectedRoute>
+            } />
+            <Route path="/history" element={
+              <ProtectedRoute><History /></ProtectedRoute>
+            } />
+            
+            {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>

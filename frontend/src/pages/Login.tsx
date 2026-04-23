@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Paper, TextField, Button, Typography, Box, Alert, InputAdornment, IconButton, Container } from '@mui/material';
+import { Paper, TextField, Button, Typography, Box, Alert, InputAdornment, IconButton, Container, Avatar, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -19,29 +19,41 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    
     setTimeout(() => {
       if (email && password) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userName', email.split('@')[0]);
+        localStorage.setItem('userEmail', email);
         navigate('/dashboard');
       } else {
-        setError('Invalid email or password');
+        setError('Please enter both email and password');
       }
       setLoading(false);
-    }, 1000);
+    }, 800);
   };
 
   return (
     <Container maxWidth="sm" sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', py: 4 }}>
-      <Paper elevation={0} sx={{ p: 5, width: '100%', borderRadius: 4 }}>
+      <Paper 
+        elevation={3} 
+        sx={{ 
+          p: 5, 
+          width: '100%', 
+          borderRadius: 4,
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+          bgcolor: '#ffffff',
+        }}
+      >
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'rgba(22,194,101,0.15)', width: 64, height: 64 }}>
-            <AgricultureIcon sx={{ fontSize: 32, color: '#16c265' }} />
+          <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: '#1b8c2e', width: 56, height: 56 }}>
+            <AgricultureIcon sx={{ fontSize: 28, color: '#fff' }} />
           </Avatar>
-          <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#f0fdf4' }}>
+          <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#0f172a' }}>
             Welcome Back
           </Typography>
-          <Typography variant="body2" sx={{ color: '#6b7f74' }}>
+          <Typography variant="body2" sx={{ color: '#475569', mt: 1 }}>
             Sign in to monitor your farm
           </Typography>
         </Box>
@@ -57,10 +69,11 @@ const Login: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
             required
+            placeholder="farmer@agriedge.com"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <EmailOutlinedIcon sx={{ color: '#3d4f44' }} />
+                  <EmailOutlinedIcon sx={{ color: '#94a3b8' }} />
                 </InputAdornment>
               ),
             }}
@@ -74,10 +87,11 @@ const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
+            placeholder="Enter your password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <LockOutlinedIcon sx={{ color: '#3d4f44' }} />
+                  <LockOutlinedIcon sx={{ color: '#94a3b8' }} />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -96,21 +110,41 @@ const Login: React.FC = () => {
             variant="contained"
             size="large"
             disabled={loading}
-            sx={{ mt: 3, py: 1.5, borderRadius: 2 }}
+            sx={{ 
+              mt: 4, 
+              py: 1.5, 
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #1b8c2e, #2eae40)',
+              fontSize: '1rem',
+              fontWeight: 600,
+              boxShadow: '0 4px 15px rgba(27,140,46,0.3)',
+              color: '#ffffff',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 20px rgba(27,140,46,0.4)',
+              }
+            }}
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
 
           <Box sx={{ textAlign: 'center', mt: 3 }}>
-            <Typography variant="body2" sx={{ color: '#6b7f74' }}>
+            <Typography variant="body2" sx={{ color: '#475569' }}>
               Don't have an account?{' '}
-              <Typography
-                component="span"
-                sx={{ color: '#16c265', cursor: 'pointer', fontWeight: 600, '&:hover': { color: '#4ade80' } }}
+              <Link 
+                component="button"
+                underline="hover"
+                sx={{ color: '#1b8c2e', fontWeight: 600, cursor: 'pointer' }}
                 onClick={() => navigate('/register')}
               >
                 Create Account
-              </Typography>
+              </Link>
+            </Typography>
+          </Box>
+          
+          <Box sx={{ textAlign: 'center', mt: 2 }}>
+            <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+              Demo: Use any email and password
             </Typography>
           </Box>
         </form>

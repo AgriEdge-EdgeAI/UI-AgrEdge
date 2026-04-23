@@ -18,6 +18,7 @@ import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 
 // Generate 24h moisture data
 const generate24hMoisture = () => {
@@ -67,12 +68,14 @@ const LiveFeed: React.FC = () => {
   });
   const [pumpStatus, setPumpStatus] = useState(false);
   const [pumpSeconds, setPumpSeconds] = useState(0);
-  const [edgeStatus] = useState({
+  const [espStatus] = useState({
     cpu: 12,
     ram: 34,
-    disk: 28,
+    flash: 28,
     lastInference: '2s ago',
-    model: 'KNN v1.2'
+    model: 'KNN v1.2',
+    temperature: 42,
+    uptime: '14d 8h'
   });
 
   useEffect(() => {
@@ -105,10 +108,10 @@ const LiveFeed: React.FC = () => {
     <Container maxWidth="xl" sx={{ py: 3 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#f0fdf4', mb: 1 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#0f172a', mb: 1 }}>
           Real-Time Monitoring
         </Typography>
-        <Typography variant="body2" sx={{ color: '#6b7f74' }}>
+        <Typography variant="body2" sx={{ color: '#475569' }}>
           Live sensor data, edge device status & ML predictions
         </Typography>
       </Box>
@@ -117,83 +120,83 @@ const LiveFeed: React.FC = () => {
         {/* LEFT COLUMN */}
         <Grid size={{ xs: 12, lg: 8 }}>
           {/* Soil Moisture Chart */}
-          <Paper sx={{ p: 3, mb: 3, bgcolor: '#111813' }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#f0fdf4', mb: 0.5 }}>
+          <Paper sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#0f172a', mb: 0.5 }}>
               Soil Moisture Trend
             </Typography>
-            <Typography variant="caption" sx={{ color: '#6b7f74', display: 'block', mb: 2 }}>
+            <Typography variant="caption" sx={{ color: '#475569', display: 'block', mb: 2 }}>
               Last 24 hours
             </Typography>
-            <Box sx={{ height: 280 }}>
+            <Box sx={{ height: 300, width: '100%', minHeight: 300 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={moistureData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(22,194,101,0.1)" />
-                  <XAxis dataKey="time" tick={{ fill: '#6b7f74', fontSize: 11 }} />
-                  <YAxis domain={[0, 100]} tick={{ fill: '#6b7f74', fontSize: 11 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="time" tick={{ fill: '#475569', fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#475569', fontSize: 11 }} />
                   <Tooltip />
-                  <ReferenceLine y={50} stroke="#f59e0b" strokeDasharray="4 4" />
-                  <Area type="monotone" dataKey="moisture" stroke="#16c265" strokeWidth={2} fill="rgba(22,194,101,0.1)" />
+                  <ReferenceLine y={50} stroke="#f97316" strokeDasharray="4 4" />
+                  <Area type="monotone" dataKey="moisture" stroke="#1b8c2e" strokeWidth={2} fill="rgba(27,140,46,0.08)" />
                 </AreaChart>
               </ResponsiveContainer>
             </Box>
           </Paper>
 
           {/* ML Forecast Panel */}
-          <Paper sx={{ p: 3, bgcolor: '#111813', border: '1px solid rgba(22,194,101,0.15)' }}>
+          <Paper sx={{ p: 3, border: '1px solid rgba(27,140,46,0.12)' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: 'rgba(22,194,101,0.15)', width: 48, height: 48 }}>
-                <AutoGraphIcon sx={{ color: '#16c265' }} />
+              <Avatar sx={{ bgcolor: 'rgba(27,140,46,0.1)', width: 48, height: 48 }}>
+                <AutoGraphIcon sx={{ color: '#1b8c2e' }} />
               </Avatar>
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: '#f0fdf4' }}>ML Water Usage Forecast</Typography>
-                <Typography variant="caption" sx={{ color: '#6b7f74' }}>Predicted daily water usage for the next 30 days</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#0f172a' }}>ML Water Usage Forecast</Typography>
+                <Typography variant="caption" sx={{ color: '#475569' }}>Predicted daily water usage for the next 30 days</Typography>
               </Box>
             </Box>
 
             <Grid container spacing={2} sx={{ mb: 3 }}>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(22,194,101,0.05)', border: '1px solid rgba(22,194,101,0.1)' }}>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>Predicted Total (Next 30 Days)</Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: '#16c265' }}>{Math.round(totalPredicted)} L</Typography>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>~{Math.round(totalPredicted / 30)} L/day</Typography>
+                <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(27,140,46,0.04)' }}>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>Predicted Total (Next 30 Days)</Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: '#1b8c2e' }}>{Math.round(totalPredicted)} L</Typography>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>~{Math.round(totalPredicted / 30)} L/day</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(56,189,248,0.05)', border: '1px solid rgba(56,189,248,0.1)' }}>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>Last Month Actual</Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: '#38bdf8' }}>{lastMonthTotal} L</Typography>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>~{Math.round(lastMonthTotal / 30)} L/day</Typography>
+                <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(59,130,246,0.04)' }}>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>Last Month Actual</Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: '#3b82f6' }}>{lastMonthTotal} L</Typography>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>~{Math.round(lastMonthTotal / 30)} L/day</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Box sx={{ p: 2, borderRadius: 2, bgcolor: savingsDelta >= 0 ? 'rgba(22,194,101,0.05)' : 'rgba(239,68,68,0.05)' }}>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>Projected Change</Typography>
+                <Box sx={{ p: 2, borderRadius: 2, bgcolor: savingsDelta >= 0 ? 'rgba(27,140,46,0.04)' : 'rgba(239,68,68,0.04)' }}>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>Projected Change</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="h4" sx={{ fontWeight: 700, color: savingsDelta >= 0 ? '#16c265' : '#ef4444' }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: savingsDelta >= 0 ? '#1b8c2e' : '#ef4444' }}>
                       {savingsDelta >= 0 ? '-' : '+'}{Math.abs(savingsDelta)}%
                     </Typography>
-                    {savingsDelta >= 0 ? <TrendingDownIcon sx={{ color: '#16c265' }} /> : <TrendingUpIcon sx={{ color: '#ef4444' }} />}
+                    {savingsDelta >= 0 ? <TrendingDownIcon sx={{ color: '#1b8c2e' }} /> : <TrendingUpIcon sx={{ color: '#ef4444' }} />}
                   </Box>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>{savingsDelta >= 0 ? 'Less' : 'More'} usage</Typography>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>{savingsDelta >= 0 ? 'Less' : 'More'} usage</Typography>
                 </Box>
               </Grid>
             </Grid>
 
-            <Box sx={{ height: 250 }}>
+            <Box sx={{ height: 300, width: '100%', minHeight: 300 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={mlData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(22,194,101,0.1)" />
-                  <XAxis dataKey="day" tick={{ fill: '#6b7f74', fontSize: 10 }} interval={4} />
-                  <YAxis tick={{ fill: '#6b7f74', fontSize: 11 }} tickFormatter={(v) => `${v}L`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="day" tick={{ fill: '#475569', fontSize: 10 }} interval={4} />
+                  <YAxis tick={{ fill: '#475569', fontSize: 11 }} tickFormatter={(v) => `${v}L`} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="predicted" stroke="#16c265" strokeWidth={2} fill="rgba(22,194,101,0.1)" />
+                  <Area type="monotone" dataKey="predicted" stroke="#1b8c2e" strokeWidth={2} fill="rgba(27,140,46,0.08)" />
                 </AreaChart>
               </ResponsiveContainer>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, p: 1.5, borderRadius: 2, bgcolor: 'rgba(22,194,101,0.03)' }}>
-              <InfoOutlinedIcon sx={{ fontSize: 16, color: '#3d4f44' }} />
-              <Typography variant="caption" sx={{ color: '#3d4f44' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, p: 1.5, borderRadius: 2, bgcolor: '#f8fafc' }}>
+              <InfoOutlinedIcon sx={{ fontSize: 16, color: '#94a3b8' }} />
+              <Typography variant="caption" sx={{ color: '#64748b' }}>
                 Predictions generated by on-device KNN model using last 90 days of data.
               </Typography>
             </Box>
@@ -203,120 +206,144 @@ const LiveFeed: React.FC = () => {
         {/* RIGHT COLUMN */}
         <Grid size={{ xs: 12, lg: 4 }}>
           {/* Current Readings */}
-          <Paper sx={{ p: 3, mb: 3, bgcolor: '#111813' }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#f0fdf4', mb: 2 }}>Current Readings</Typography>
+          <Paper sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#0f172a', mb: 2 }}>Current Readings</Typography>
             <Divider sx={{ mb: 2 }} />
             
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <OpacityIcon sx={{ color: '#16c265' }} />
-                <Typography variant="body2" sx={{ color: '#6b7f74' }}>Soil Moisture</Typography>
+                <OpacityIcon sx={{ color: '#1b8c2e' }} />
+                <Typography variant="body2" sx={{ color: '#475569' }}>Soil Moisture</Typography>
               </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#16c265' }}>{sensorReadings.soilMoisture}%</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1b8c2e' }}>{sensorReadings.soilMoisture}%</Typography>
             </Box>
             
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <ThermostatIcon sx={{ color: '#ef4444' }} />
-                <Typography variant="body2" sx={{ color: '#6b7f74' }}>Temperature</Typography>
+                <Typography variant="body2" sx={{ color: '#475569' }}>Temperature</Typography>
               </Box>
               <Typography variant="h6" sx={{ fontWeight: 700, color: '#ef4444' }}>{sensorReadings.temperature}°C</Typography>
             </Box>
             
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <OpacityIcon sx={{ color: '#38bdf8' }} />
-                <Typography variant="body2" sx={{ color: '#6b7f74' }}>Humidity</Typography>
+                <OpacityIcon sx={{ color: '#3b82f6' }} />
+                <Typography variant="body2" sx={{ color: '#475569' }}>Humidity</Typography>
               </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: '#38bdf8' }}>{sensorReadings.humidity}%</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#3b82f6' }}>{sensorReadings.humidity}%</Typography>
             </Box>
             
             <Divider sx={{ my: 2 }} />
             
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="caption" sx={{ color: '#6b7f74' }}>Last reading</Typography>
-              <Chip label="Just now" size="small" sx={{ bgcolor: 'rgba(22,194,101,0.1)', color: '#16c265' }} />
+              <Typography variant="caption" sx={{ color: '#475569' }}>Last reading</Typography>
+              <Chip label="Just now" size="small" sx={{ bgcolor: 'rgba(27,140,46,0.08)', color: '#1b8c2e' }} />
             </Box>
           </Paper>
 
-          {/* Edge Device Status */}
-          <Paper sx={{ p: 3, mb: 3, bgcolor: '#111813' }}>
+          {/* ESP32 Edge Device */}
+          <Paper sx={{ p: 3, mb: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Avatar sx={{ bgcolor: 'rgba(22,194,101,0.1)' }}>
-                  <ComputerIcon sx={{ color: '#16c265' }} />
+                <Avatar sx={{ bgcolor: 'rgba(27,140,46,0.08)' }}>
+                  <DeveloperBoardIcon sx={{ color: '#1b8c2e' }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#f0fdf4' }}>Raspberry Pi 4</Typography>
-                  <Typography variant="caption" sx={{ color: '#6b7f74' }}>Edge inference device</Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#0f172a' }}>ESP32 Edge Device</Typography>
+                  <Typography variant="caption" sx={{ color: '#475569' }}>On-device ML inference</Typography>
                 </Box>
               </Box>
-              <Chip icon={<CheckCircleIcon />} label="Online" size="small" sx={{ bgcolor: 'rgba(22,194,101,0.1)', color: '#16c265' }} />
+              <Chip icon={<CheckCircleIcon />} label="Online" size="small" sx={{ bgcolor: 'rgba(27,140,46,0.08)', color: '#1b8c2e' }} />
             </Box>
             
             <Divider sx={{ mb: 2 }} />
             
             <Grid container spacing={2}>
               <Grid size={{ xs: 4 }}>
-                <Typography variant="caption" sx={{ color: '#6b7f74' }}>CPU: {edgeStatus.cpu}%</Typography>
-                <LinearProgress variant="determinate" value={edgeStatus.cpu} sx={{ mt: 0.5, height: 4 }} />
+                <Typography variant="caption" sx={{ color: '#475569' }}>CPU: {espStatus.cpu}%</Typography>
+                <LinearProgress variant="determinate" value={espStatus.cpu} sx={{ mt: 0.5, height: 4 }} />
               </Grid>
               <Grid size={{ xs: 4 }}>
-                <Typography variant="caption" sx={{ color: '#6b7f74' }}>RAM: {edgeStatus.ram}%</Typography>
-                <LinearProgress variant="determinate" value={edgeStatus.ram} sx={{ mt: 0.5, height: 4 }} />
+                <Typography variant="caption" sx={{ color: '#475569' }}>RAM: {espStatus.ram}%</Typography>
+                <LinearProgress variant="determinate" value={espStatus.ram} sx={{ mt: 0.5, height: 4 }} />
               </Grid>
               <Grid size={{ xs: 4 }}>
-                <Typography variant="caption" sx={{ color: '#6b7f74' }}>Disk: {edgeStatus.disk}%</Typography>
-                <LinearProgress variant="determinate" value={edgeStatus.disk} sx={{ mt: 0.5, height: 4 }} />
+                <Typography variant="caption" sx={{ color: '#475569' }}>Flash: {espStatus.flash}%</Typography>
+                <LinearProgress variant="determinate" value={espStatus.flash} sx={{ mt: 0.5, height: 4 }} />
               </Grid>
             </Grid>
             
-            <Box sx={{ mt: 2, p: 1.5, borderRadius: 2, bgcolor: 'rgba(22,194,101,0.04)' }}>
-              <Typography variant="caption" sx={{ color: '#6b7f74' }}>
-                Last inference: <strong style={{ color: '#16c265' }}>{edgeStatus.lastInference}</strong> · Model: <strong style={{ color: '#16c265' }}>{edgeStatus.model}</strong>
+            <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+              <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f8fafc', flex: 1 }}>
+                <Typography variant="caption" sx={{ color: '#475569' }}>Chip Temp</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: '#f97316' }}>{espStatus.temperature}°C</Typography>
+              </Box>
+              <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f8fafc', flex: 1 }}>
+                <Typography variant="caption" sx={{ color: '#475569' }}>Uptime</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: '#1b8c2e' }}>{espStatus.uptime}</Typography>
+              </Box>
+            </Box>
+            
+            <Box sx={{ mt: 2, p: 1.5, borderRadius: 2, bgcolor: '#f8fafc' }}>
+              <Typography variant="caption" sx={{ color: '#475569' }}>
+                Last inference: <strong style={{ color: '#1b8c2e' }}>{espStatus.lastInference}</strong> · Model: <strong style={{ color: '#f97316' }}>{espStatus.model}</strong>
               </Typography>
             </Box>
           </Paper>
 
           {/* Manual Pump Control */}
-          <Paper sx={{ p: 3, bgcolor: '#111813' }}>
+          <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-              <Avatar sx={{ bgcolor: 'rgba(22,194,101,0.1)' }}>
-                <WaterDropIcon sx={{ color: '#16c265' }} />
+              <Avatar sx={{ bgcolor: 'rgba(27,140,46,0.08)' }}>
+                <WaterDropIcon sx={{ color: '#1b8c2e' }} />
               </Avatar>
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#f0fdf4' }}>Manual Pump Control</Typography>
-                <Typography variant="caption" sx={{ color: '#6b7f74' }}>Override automatic irrigation</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#0f172a' }}>Manual Pump Control</Typography>
+                <Typography variant="caption" sx={{ color: '#475569' }}>Override automatic irrigation</Typography>
               </Box>
             </Box>
             
             <Divider sx={{ mb: 2 }} />
             
             <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              <Button fullWidth variant="contained" startIcon={<PlayArrowIcon />} onClick={() => setPumpStatus(true)} disabled={pumpStatus}>
+              <Button 
+                fullWidth 
+                variant="contained" 
+                startIcon={<PlayArrowIcon />} 
+                onClick={() => setPumpStatus(true)} 
+                disabled={pumpStatus}
+              >
                 Start Pump
               </Button>
-              <Button fullWidth variant="outlined" startIcon={<StopIcon />} onClick={() => setPumpStatus(false)} disabled={!pumpStatus}>
+              <Button 
+                fullWidth 
+                variant="outlined" 
+                startIcon={<StopIcon />} 
+                onClick={() => setPumpStatus(false)} 
+                disabled={!pumpStatus}
+                sx={{ borderColor: '#ef4444', color: '#ef4444' }}
+              >
                 Stop Pump
               </Button>
             </Box>
             
             {pumpStatus ? (
-              <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(22,194,101,0.08)' }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(27,140,46,0.06)' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <span className="pulse-dot" style={{ width: 6, height: 6 }} />
-                    <Typography variant="body2" sx={{ color: '#16c265', fontWeight: 600 }}>Pump Running</Typography>
+                    <Typography variant="body2" sx={{ color: '#1b8c2e', fontWeight: 600 }}>Pump Running</Typography>
                   </Box>
-                  <Typography variant="h6" sx={{ color: '#16c265', fontWeight: 700 }}>{fmtTime(pumpSeconds)}</Typography>
+                  <Typography variant="h6" sx={{ color: '#1b8c2e', fontWeight: 700 }}>{fmtTime(pumpSeconds)}</Typography>
                 </Box>
-                <Typography variant="caption" sx={{ color: '#6b7f74', mt: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: '#475569', mt: 1, display: 'block' }}>
                   Flow rate: 2.5 L/min · Est. used: {(pumpSeconds / 60 * 2.5).toFixed(1)} L
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(61,79,68,0.15)' }}>
-                <Typography variant="caption" sx={{ color: '#3d4f44' }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: '#f8fafc' }}>
+                <Typography variant="caption" sx={{ color: '#64748b' }}>
                   Pump is idle · Last run: 10:30 AM (6 min, 15 L used)
                 </Typography>
               </Box>

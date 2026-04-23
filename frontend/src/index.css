@@ -8,32 +8,47 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: #f0f4ef;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 30%, #f1f5f9 70%, #fef3c7 100%);
+  background-attachment: fixed;
   min-height: 100vh;
-  color: #111111;
+  color: #0f172a;
   font-weight: 400;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  position: relative;
 }
 
-/* Headings with Space Grotesk */
+/* Subtle animated gradient overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 0% 0%, rgba(13,107,58,0.03) 0%, transparent 50%),
+              radial-gradient(circle at 100% 100%, rgba(249,115,22,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Headings */
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: 'Space Grotesk', 'Inter', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #111111;
+  color: #0f172a;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #e0e4dc; border-radius: 99px; }
-::-webkit-scrollbar-thumb { background: #1b8c2e; border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: #2eae40; }
+::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #0d6b3a, #f97316); border-radius: 99px; }
 
-/* Gradient text */
+/* Gradient text - KEEPING ORIGINAL FOR "WASTE NOTHING" */
 .gradient-text {
-  background: linear-gradient(135deg, #1b8c2e 0%, #4caf50 50%, #d9742e 100%);
+  background: linear-gradient(135deg, #0d6b3a 0%, #f97316 50%, #1a8549 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -41,12 +56,12 @@ h1, h2, h3, h4, h5, h6,
 
 /* Pulse dot */
 .pulse-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #1b8c2e;
+  width: 8px; height: 8px; border-radius: 50%; background: #0d6b3a;
   position: relative; display: inline-block;
 }
 .pulse-dot::after {
   content: ''; position: absolute; inset: -4px; border-radius: 50%;
-  background: rgba(27, 140, 46, 0.4);
+  background: rgba(13,107,58,0.4);
   animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
@@ -62,8 +77,8 @@ h1, h2, h3, h4, h5, h6,
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 .card-hover:hover {
-  transform: translateY(-8px) !important;
-  box-shadow: 0 25px 35px -12px rgba(27, 140, 46, 0.2) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 30px -12px rgba(13,107,58,0.15) !important;
 }
 
 /* Button shine effect */
@@ -78,7 +93,7 @@ h1, h2, h3, h4, h5, h6,
   left: -60%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
   transform: rotate(30deg);
   transition: transform 0.5s ease;
 }
@@ -95,22 +110,4 @@ h1, h2, h3, h4, h5, h6,
 }
 .stat-number:hover {
   transform: scale(1.02);
-}
-
-/* Link hover effects */
-.hover-link {
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-.hover-link:hover {
-  color: #1b8c2e !important;
-  transform: translateX(4px);
-}
-
-/* Icon hover */
-.icon-hover {
-  transition: all 0.2s ease;
-}
-.icon-hover:hover {
-  transform: scale(1.1) rotate(5deg);
 }
