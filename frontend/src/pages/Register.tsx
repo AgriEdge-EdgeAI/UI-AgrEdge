@@ -10,6 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 
+const PRIMARY_GREEN = '#0d6b3a';
+const PRIMARY_GREEN_LIGHT = '#1a8549';
+
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ 
@@ -54,16 +57,17 @@ const Register: React.FC = () => {
           borderRadius: 4,
           border: '1px solid #e2e8f0',
           boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+          bgcolor: '#ffffff',
         }}
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: '#1b8c2e', width: 56, height: 56 }}>
+          <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: PRIMARY_GREEN, width: 56, height: 56 }}>
             <AgricultureIcon sx={{ fontSize: 28, color: '#fff' }} />
           </Avatar>
           <Typography variant="h4" sx={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, color: '#0f172a' }}>
             Create Account
           </Typography>
-          <Typography variant="body2" sx={{ color: '#64748b', mt: 1 }}>
+          <Typography variant="body2" sx={{ color: '#475569', mt: 1 }}>
             Join AgriEdge and start saving water today
           </Typography>
         </Box>
@@ -176,13 +180,14 @@ const Register: React.FC = () => {
               mt: 4, 
               py: 1.5, 
               borderRadius: 2,
-              background: 'linear-gradient(135deg, #1b8c2e, #2eae40)',
+              background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`,
               fontSize: '1rem',
               fontWeight: 600,
-              boxShadow: '0 4px 15px rgba(27,140,46,0.3)',
+              boxShadow: `0 4px 15px rgba(13,107,58,0.3)`,
+              color: '#ffffff',
               '&:hover': { 
                 transform: 'translateY(-2px)',
-                boxShadow: '0 8px 20px rgba(27,140,46,0.4)',
+                boxShadow: `0 8px 20px rgba(13,107,58,0.4)`,
               }
             }}
           >
@@ -190,12 +195,12 @@ const Register: React.FC = () => {
           </Button>
           
           <Box sx={{ textAlign: 'center', mt: 3 }}>
-            <Typography variant="body2" sx={{ color: '#64748b' }}>
+            <Typography variant="body2" sx={{ color: '#475569' }}>
               Already have an account?{' '}
               <Link 
                 component="button"
                 underline="hover"
-                sx={{ color: '#1b8c2e', fontWeight: 600, cursor: 'pointer' }}
+                sx={{ color: PRIMARY_GREEN, fontWeight: 600, cursor: 'pointer' }}
                 onClick={() => navigate('/login')}
               >
                 Sign In
