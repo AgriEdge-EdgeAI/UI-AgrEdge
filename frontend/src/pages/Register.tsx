@@ -16,7 +16,13 @@ const PRIMARY_GREEN_LIGHT = '#1a8549';
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ 
-    fullName: '', farmName: '', location: '', email: '', phoneNumber: '', password: '', confirmPassword: '' 
+    fullName: '', 
+    farmName: '', 
+    location: '', 
+    email: '', 
+    phoneNumber: '', 
+    password: '', 
+    confirmPassword: '' 
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -27,6 +33,8 @@ const Register: React.FC = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
     if (formData.password !== formData.confirmPassword) { 
       setError('Passwords do not match'); 
       return; 
@@ -35,13 +43,25 @@ const Register: React.FC = () => {
       setError('Password must be at least 6 characters'); 
       return; 
     }
+    if (!formData.fullName || !formData.email) {
+      setError('Please fill in all required fields');
+      return;
+    }
+    
     setLoading(true);
+    
+    // Simulate API call
     setTimeout(() => {
+      // Store user data in localStorage
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userName', formData.fullName.split(' ')[0]);
+      localStorage.setItem('fullName', formData.fullName);
       localStorage.setItem('farmName', formData.farmName);
       localStorage.setItem('location', formData.location);
       localStorage.setItem('userEmail', formData.email);
+      localStorage.setItem('phoneNumber', formData.phoneNumber);
+      
+      // Navigate to dashboard
       navigate('/dashboard');
       setLoading(false);
     }, 800);
@@ -81,6 +101,7 @@ const Register: React.FC = () => {
                 fullWidth 
                 label="Full Name" 
                 name="fullName" 
+                value={formData.fullName}
                 onChange={handleChange} 
                 required 
                 InputProps={{
@@ -93,6 +114,7 @@ const Register: React.FC = () => {
                 fullWidth 
                 label="Farm Name" 
                 name="farmName" 
+                value={formData.farmName}
                 onChange={handleChange} 
                 required 
                 InputProps={{
@@ -105,6 +127,7 @@ const Register: React.FC = () => {
                 fullWidth 
                 label="Location" 
                 name="location" 
+                value={formData.location}
                 onChange={handleChange} 
                 required 
                 placeholder="e.g., Colombo, Sri Lanka"
@@ -132,6 +155,7 @@ const Register: React.FC = () => {
                 fullWidth 
                 label="Phone Number" 
                 name="phoneNumber" 
+                value={formData.phoneNumber}
                 onChange={handleChange} 
                 required 
                 InputProps={{
@@ -145,9 +169,11 @@ const Register: React.FC = () => {
                 label="Password" 
                 name="password" 
                 type={showPassword ? 'text' : 'password'} 
+                value={formData.password}
                 onChange={handleChange} 
                 required 
                 InputProps={{
+                  startAdornment: <InputAdornment position="start"><LockOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment>,
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
@@ -164,8 +190,12 @@ const Register: React.FC = () => {
                 label="Confirm Password" 
                 name="confirmPassword" 
                 type={showPassword ? 'text' : 'password'} 
+                value={formData.confirmPassword}
                 onChange={handleChange} 
                 required 
+                InputProps={{
+                  startAdornment: <InputAdornment position="start"><LockOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment>,
+                }}
               />
             </Grid>
           </Grid>

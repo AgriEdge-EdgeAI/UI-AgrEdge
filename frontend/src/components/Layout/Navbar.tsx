@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Container, Avatar, Menu, MenuItem } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
@@ -15,14 +15,35 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  const userName = localStorage.getItem('userName') || 'Farmer';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('Farmer');
+  const [userInitial, setUserInitial] = useState('F');
+
+  // Check login status on mount and when localStorage changes
+  useEffect(() => {
+    const checkLogin = () => {
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const name = localStorage.getItem('userName') || 'Farmer';
+      setIsLoggedIn(loggedIn);
+      setUserName(name);
+      setUserInitial(name.charAt(0).toUpperCase());
+    };
+    
+    checkLogin();
+    
+    // Listen for storage changes (in case of login from another tab)
+    window.addEventListener('storage', checkLogin);
+    return () => window.removeEventListener('storage', checkLogin);
+  }, []);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     localStorage.clear();
+    setIsLoggedIn(false);
+    setUserName('Farmer');
+    setUserInitial('F');
     navigate('/login');
     handleClose();
   };
@@ -33,7 +54,7 @@ const Navbar: React.FC = () => {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ gap: 2, minHeight: { xs: 60, md: 68 } }}>
-          {/* Logo with NEW GREEN */}
+          {/* Logo */}
           <Box 
             sx={{ 
               display: 'flex', 
@@ -115,8 +136,8 @@ const Navbar: React.FC = () => {
                     <span className="pulse-dot" style={{ width: 6, height: 6 }} />
                     <Typography variant="caption" sx={{ color: PRIMARY_GREEN, fontWeight: 600 }}>LIVE</Typography>
                   </Box>
-                  <Avatar sx={{ width: 34, height: 34, bgcolor: PRIMARY_GREEN }}>
-                    {userName.charAt(0).toUpperCase()}
+                  <Avatar sx={{ width: 34, height: 34, bgcolor: PRIMARY_GREEN, color: '#fff', fontWeight: 600 }}>
+                    {userInitial}
                   </Avatar>
                 </Box>
                 <Menu 
