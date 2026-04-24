@@ -8,33 +8,68 @@ import AgricultureIcon from '@mui/icons-material/Agriculture';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import { api } from '../services/api';
 
 const PRIMARY_GREEN = '#0d6b3a';
 const PRIMARY_GREEN_LIGHT = '#1a8549';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ fullName: '', farmName: '', location: '', email: '', phoneNumber: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ 
+    fullName: '', farmName: '', location: '', email: '', phoneNumber: '', password: '', confirmPassword: '' 
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => 
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) { setError('Passwords do not match'); return; }
-    if (formData.password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    
+    // Validation
+    if (formData.password !== formData.confirmPassword) { 
+      setError('Passwords do not match'); 
+      return; 
+    }
+    if (formData.password.length < 6) { 
+      setError('Password must be at least 6 characters'); 
+      return; 
+    }
+    
     setLoading(true);
-    setTimeout(() => {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userName', formData.fullName.split(' ')[0]);
-      localStorage.setItem('farmName', formData.farmName);
-      localStorage.setItem('location', formData.location);
-      localStorage.setItem('userEmail', formData.email);
-      navigate('/dashboard');
+    setError('');
+    
+    try {
+      const response = await api.signup({
+        full_name: formData.fullName,
+        farm_name: formData.farmName,
+        location: formData.location,
+        email: formData.email,
+        phone_number: formData.phoneNumber,
+        password: formData.password,
+      });
+      
+      if (response.status === 201 || response.status === 200) {
+        // Store user info in localStorage for UI state
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userName', formData.fullName.split(' ')[0]);
+        localStorage.setItem('fullName', formData.fullName);
+        localStorage.setItem('farmName', formData.farmName);
+        localStorage.setItem('location', formData.location);
+        localStorage.setItem('userEmail', formData.email);
+        
+        // Show success and redirect
+        navigate('/dashboard');
+      } else {
+        setError(response.error || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      setError('Network error. Please check your connection.');
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   return (
@@ -53,29 +88,36 @@ const Register: React.FC = () => {
         <form onSubmit={handleRegister}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Full Name" name="fullName" onChange={handleChange} required slotProps={{ input: { startAdornment: <InputAdornment position="start"><PersonIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
+              <TextField fullWidth label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} required 
+                slotProps={{ input: { startAdornment: <InputAdornment position="start"><PersonIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Farm Name" name="farmName" onChange={handleChange} required slotProps={{ input: { startAdornment: <InputAdornment position="start"><AgricultureIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
+              <TextField fullWidth label="Farm Name" name="farmName" value={formData.farmName} onChange={handleChange} required 
+                slotProps={{ input: { startAdornment: <InputAdornment position="start"><AgricultureIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
             </Grid>
             <Grid size={12}>
-              <TextField fullWidth label="Location" name="location" onChange={handleChange} required placeholder="e.g., Colombo, Sri Lanka" slotProps={{ input: { startAdornment: <InputAdornment position="start"><LocationOnOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
+              <TextField fullWidth label="Location" name="location" value={formData.location} onChange={handleChange} required placeholder="e.g., Colombo, Sri Lanka"
+                slotProps={{ input: { startAdornment: <InputAdornment position="start"><LocationOnOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Email Address" name="email" type="email" onChange={handleChange} required slotProps={{ input: { startAdornment: <InputAdornment position="start"><EmailOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
+              <TextField fullWidth label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} required 
+                slotProps={{ input: { startAdornment: <InputAdornment position="start"><EmailOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Phone Number" name="phoneNumber" onChange={handleChange} required slotProps={{ input: { startAdornment: <InputAdornment position="start"><PhoneOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
+              <TextField fullWidth label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required 
+                slotProps={{ input: { startAdornment: <InputAdornment position="start"><PhoneOutlinedIcon sx={{ color: '#94a3b8' }} /></InputAdornment> } }} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Password" name="password" type={showPassword ? 'text' : 'password'} onChange={handleChange} required slotProps={{ input: { endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)} edge="end">{showPassword ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment> } }} />
+              <TextField fullWidth label="Password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} required 
+                slotProps={{ input: { endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)} edge="end">{showPassword ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment> } }} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Confirm Password" name="confirmPassword" type={showPassword ? 'text' : 'password'} onChange={handleChange} required />
+              <TextField fullWidth label="Confirm Password" name="confirmPassword" type={showPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} required />
             </Grid>
           </Grid>
           
-          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading} sx={{ mt: 4, py: 1.5, borderRadius: 2, background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`, fontSize: '1rem', fontWeight: 600, color: '#ffffff', '&:hover': { transform: 'translateY(-2px)' } }}>
+          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading} 
+            sx={{ mt: 4, py: 1.5, borderRadius: 2, background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`, fontSize: '1rem', fontWeight: 600, color: '#ffffff', '&:hover': { transform: 'translateY(-2px)' } }}>
             {loading ? 'Creating Account...' : 'Create Account'}
           </Button>
           

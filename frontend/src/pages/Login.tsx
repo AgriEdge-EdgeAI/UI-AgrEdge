@@ -6,6 +6,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
+import { api } from '../services/api';
 
 const PRIMARY_GREEN = '#0d6b3a';
 const PRIMARY_GREEN_LIGHT = '#1a8549';
@@ -22,17 +23,25 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setTimeout(() => {
-      if (email && password) {
+    
+    try {
+      const response = await api.login({ email, password });
+      
+      if (response.status === 200) {
+        // Store user info in localStorage for UI state
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userName', email.split('@')[0]);
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', email.split('@')[0]);
+        
         navigate('/dashboard');
       } else {
-        setError('Please enter both email and password');
+        setError(response.error || 'Invalid email or password');
       }
+    } catch (err) {
+      setError('Network error. Please check your connection.');
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   return (
@@ -96,7 +105,8 @@ const Login: React.FC = () => {
             }}
           />
           
-          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading} sx={{ mt: 4, py: 1.5, borderRadius: 2, background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`, fontSize: '1rem', fontWeight: 600, color: '#ffffff', '&:hover': { transform: 'translateY(-2px)' } }}>
+          <Button type="submit" fullWidth variant="contained" size="large" disabled={loading} 
+            sx={{ mt: 4, py: 1.5, borderRadius: 2, background: `linear-gradient(135deg, ${PRIMARY_GREEN}, ${PRIMARY_GREEN_LIGHT})`, fontSize: '1rem', fontWeight: 600, color: '#ffffff', '&:hover': { transform: 'translateY(-2px)' } }}>
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
 
@@ -107,10 +117,6 @@ const Login: React.FC = () => {
                 Create Account
               </Link>
             </Typography>
-          </Box>
-          
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="caption" sx={{ color: '#94a3b8' }}>Demo: Use any email and password</Typography>
           </Box>
         </form>
       </Paper>
